@@ -146,14 +146,20 @@ function get_job_info(member)
         -- For other party members, check stored job info
         if party_jobs[member.name] then
             local job_data = party_jobs[member.name]
-            local job_string = job_data.main_job .. ' ' .. tostring(job_data.main_job_level)
+            local job_string = ''
             
-            if job_data.sub_job then
-                job_string = job_string .. ' / ' .. job_data.sub_job .. ' ' .. tostring(job_data.sub_job_level)
-                color = is_valid_combo(job_data.main_job, job_data.sub_job) and colors.green or colors.red
+            -- Check if main job info exists
+            if job_data.main_job and job_data.main_job_level then
+                job_string = job_data.main_job .. ' ' .. tostring(job_data.main_job_level)
+                
+                -- Only add sub job if both main and sub job info exists
+                if job_data.sub_job and job_data.sub_job_level then
+                    job_string = job_string .. ' / ' .. job_data.sub_job .. ' ' .. tostring(job_data.sub_job_level)
+                    color = is_valid_combo(job_data.main_job, job_data.sub_job) and colors.green or colors.red
+                end
+                
+                return job_string, color
             end
-            
-            return job_string, color
         end
         
         if debug_mode then
